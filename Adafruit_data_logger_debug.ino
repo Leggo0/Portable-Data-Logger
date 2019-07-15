@@ -7,6 +7,7 @@
  * The logger should take accurate data readings, alone with
  * an accurate time of when the data was taken for future proccessing
  * 
+ * This file creates a serial connection for debugging
  * https://github.com/Leggo0/Portable-Data-Logger
  */
 
