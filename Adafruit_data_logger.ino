@@ -22,7 +22,6 @@
 #define DHTPIN 6
 #define DHTTYPE DHT11
 #define SD_CS_PIN 4
-#define SDCARDLED 8
 
 
 SdFat SD;
@@ -38,10 +37,15 @@ String FILENAME;
 const String header = "Date, Time(24Hr), Temp(C), Humidity"; //Header for file, does not change
 void setup() 
 {
+   Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  Serial.println("Serial connection opened");
+ 
   
   dht.begin();
   SD.begin(SD_CS_PIN);
-  pinMode(SDCARDLED, OUTPUT);
   DateTime now = rtc.now(); //We need to get the data to create the file name
   int month =  now.month();
   int day = now.day();
@@ -50,19 +54,26 @@ void setup()
   Serial.println("Data grabbed for file name creation");
   //Create the file name
   FILENAME = String(now.month()) +  "-" + String(now.day()) + "@" + String(now.hour()) + "-" + String(now.minute()) + ".csv";
+  //Serial.println("Name created");
 
   
   File dataFile = SD.open(FILENAME, FILE_WRITE); //Push header to file
-  dataFile.println(header);
-  dataFile.close();
-  delay(2000);
+  if (dataFile)
+  {
+    Serial.println("File first open");
+    dataFile.println(header);
+    dataFile.close();
+  }
+  else
+  {
+    Serial.println("Unable to initialize file");
+  }
 }
 
 
 void loop() 
 {
-
-  digitalWrite(SDCARDLED, HIGH);
+ 
   //Making string to push to file
   String Push = "";
   DateTime now = rtc.now(); //Get current time and date
@@ -83,8 +94,7 @@ void loop()
   dataFile.print(Humidity); //Push the humidity
   dataFile.print("\n"); //Push line deliminator
   dataFile.close(); //Close the file
-
-  digitalWrite(SDCARDLED, LOW);
+ 
   delay(60000); //Wait 1 minute
 
 }
