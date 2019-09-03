@@ -37,11 +37,11 @@ String FILENAME;
 const String header = "Date, Time(24Hr), Temp(C), Humidity"; //Header for file, does not change
 void setup() 
 {
-   Serial.begin(9600);
+   /*Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-  Serial.println("Serial connection opened");
+  Serial.println("Serial connection opened");*/
  
   
   dht.begin();
@@ -51,7 +51,7 @@ void setup()
   int day = now.day();
   int hour = now.hour();
   int minute = now.minute();
-  Serial.println("Data grabbed for file name creation");
+  //Serial.println("Data grabbed for file name creation");
   //Create the file name
   FILENAME = String(now.month()) +  "-" + String(now.day()) + "@" + String(now.hour()) + "-" + String(now.minute()) + ".csv";
   //Serial.println("Name created");
@@ -60,13 +60,13 @@ void setup()
   File dataFile = SD.open(FILENAME, FILE_WRITE); //Push header to file
   if (dataFile)
   {
-    Serial.println("File first open");
+    //Serial.println("File first open");
     dataFile.println(header);
     dataFile.close();
   }
   else
   {
-    Serial.println("Unable to initialize file");
+    //Serial.println("Unable to initialize file");
   }
 }
 
